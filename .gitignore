@@ -33,6 +33,7 @@ data/processed/*
 !data/processed/README.md
 data/splits/*
 !data/splits/README.md
+!data/splits/split_metadata.json
 
 # Model artifacts
 models/*.pkl

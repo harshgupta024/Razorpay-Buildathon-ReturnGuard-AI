@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-08-28T22:24:59.255941",
+  "random_seed": 42,
+  "source_file": "C:\\Harsh Gupta\\Project\\RazorPay\\data\\raw\\ecommerce_orders.csv",
+  "source_sha256": "c8f26fb69cf775525e4736bbc1a27eb3fe18d09e5221e0b2c769164b4d2c15cf",
+  "split_ratios": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "split_sizes": {
+    "total": 100000,
+    "train": 69999,
+    "val": 15001,
+    "test": 15000
+  },
+  "target_distribution": {
+    "overall": 0.271,
+    "train": 0.271,
+    "val": 0.271,
+    "test": 0.271,
+    "max_deviation": 0.0
+  },
+  "leakage_check": "PASSED",
+  "leakage_issues": [],
+  "split_files": {
+    "train": "train.csv",
+    "val": "val.csv",
+    "test": "test.csv"
+  },
+  "split_hashes": {
+    "train": "244125854c0287ec83eceb00c2063953d0f32b5cb8e7b8c961f9e301b06bc632",
+    "val": "c9ce9c10fc276a21add05e2879a4fb3f38d985ebee52b03650cea8a32836417d",
+    "test": "9a1ae141b8e1a6caffcd68a0e52d24f9ede709a96d3f334fe55e5e90d3dc7d5e"
+  }
+}
