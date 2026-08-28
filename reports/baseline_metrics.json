@@ -1,0 +1,114 @@
+{
+  "model_name": "Logistic Regression Baseline",
+  "trained_at": "2026-08-28T22:42:13.359052",
+  "random_seed": 42,
+  "feature_count": 36,
+  "train_metrics": {
+    "model_name": "Logistic Regression (Baseline)",
+    "dataset_split": "Train",
+    "total_samples": 69999,
+    "positive_samples": 18968,
+    "negative_samples": 51031,
+    "base_rate": 0.2709752996471378,
+    "threshold": 0.5,
+    "roc_auc": 0.7117432510424586,
+    "pr_auc": 0.4516333299406725,
+    "accuracy": 0.6514093058472263,
+    "precision": 0.4139776433705944,
+    "recall": 0.6892134120624209,
+    "f1": 0.5172611628781134,
+    "specificity": 0.6373576845446886,
+    "brier_score": 0.2179143434944448,
+    "log_loss": 0.0,
+    "confusion_matrix": [
+      [
+        32525,
+        18506
+      ],
+      [
+        5895,
+        13073
+      ]
+    ]
+  },
+  "validation_metrics": {
+    "model_name": "Logistic Regression (Baseline)",
+    "dataset_split": "Validation",
+    "total_samples": 15001,
+    "positive_samples": 4065,
+    "negative_samples": 10936,
+    "base_rate": 0.2709819345376975,
+    "threshold": 0.5,
+    "roc_auc": 0.7072536983599536,
+    "pr_auc": 0.44532549339867444,
+    "accuracy": 0.649690020665289,
+    "precision": 0.4120603015075377,
+    "recall": 0.6858548585485855,
+    "f1": 0.5148185763087434,
+    "specificity": 0.6362472567666423,
+    "brier_score": 0.2189198497248288,
+    "log_loss": 0.0,
+    "confusion_matrix": [
+      [
+        6958,
+        3978
+      ],
+      [
+        1277,
+        2788
+      ]
+    ]
+  },
+  "top_features": [
+    {
+      "feature": "product_category_Books",
+      "coefficient": -0.5840381210316322,
+      "abs_coefficient": 0.5840381210316322
+    },
+    {
+      "feature": "product_category_Home",
+      "coefficient": 0.5354402251580668,
+      "abs_coefficient": 0.5354402251580668
+    },
+    {
+      "feature": "product_category_Clothing",
+      "coefficient": -0.4524031281553077,
+      "abs_coefficient": 0.4524031281553077
+    },
+    {
+      "feature": "product_category_Electronics",
+      "coefficient": 0.39542037826029375,
+      "abs_coefficient": 0.39542037826029375
+    },
+    {
+      "feature": "customer_avg_order_value",
+      "coefficient": -0.3942975641688909,
+      "abs_coefficient": 0.3942975641688909
+    },
+    {
+      "feature": "quantity",
+      "coefficient": 0.36452436941655214,
+      "abs_coefficient": 0.36452436941655214
+    },
+    {
+      "feature": "product_price",
+      "coefficient": 0.35944527800188975,
+      "abs_coefficient": 0.35944527800188975
+    },
+    {
+      "feature": "customer_return_rate",
+      "coefficient": 0.31130505866105573,
+      "abs_coefficient": 0.31130505866105573
+    },
+    {
+      "feature": "product_category_Footwear",
+      "coefficient": 0.26895304150036786,
+      "abs_coefficient": 0.26895304150036786
+    },
+    {
+      "feature": "payment_method_COD",
+      "coefficient": 0.22542638411456714,
+      "abs_coefficient": 0.22542638411456714
+    }
+  ]
+}
