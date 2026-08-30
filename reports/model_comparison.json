@@ -1,0 +1,246 @@
+{
+  "Logistic Regression (Baseline)": {
+    "model_name": "Logistic Regression (Baseline)",
+    "train_duration_sec": 0.07,
+    "inference_latency_ms": 0.0,
+    "train_metrics": {
+      "model_name": "Logistic Regression (Baseline)",
+      "dataset_split": "Train",
+      "total_samples": 69999,
+      "positive_samples": 18968,
+      "negative_samples": 51031,
+      "base_rate": 0.2709752996471378,
+      "threshold": 0.5,
+      "roc_auc": 0.7117432500093537,
+      "pr_auc": 0.4516333464636605,
+      "accuracy": 0.6514093058472263,
+      "precision": 0.4139776433705944,
+      "recall": 0.6892134120624209,
+      "f1": 0.5172611628781134,
+      "specificity": 0.6373576845446886,
+      "brier_score": 0.21791434344056956,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          32525,
+          18506
+        ],
+        [
+          5895,
+          13073
+        ]
+      ]
+    },
+    "validation_metrics": {
+      "model_name": "Logistic Regression (Baseline)",
+      "dataset_split": "Validation",
+      "total_samples": 15001,
+      "positive_samples": 4065,
+      "negative_samples": 10936,
+      "base_rate": 0.2709819345376975,
+      "threshold": 0.5,
+      "roc_auc": 0.7072536983599536,
+      "pr_auc": 0.44532549339867444,
+      "accuracy": 0.649690020665289,
+      "precision": 0.4120603015075377,
+      "recall": 0.6858548585485855,
+      "f1": 0.5148185763087434,
+      "specificity": 0.6362472567666423,
+      "brier_score": 0.2189198496605973,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          6958,
+          3978
+        ],
+        [
+          1277,
+          2788
+        ]
+      ]
+    }
+  },
+  "Random Forest": {
+    "model_name": "Random Forest",
+    "train_duration_sec": 1.3,
+    "inference_latency_ms": 0.026,
+    "train_metrics": {
+      "model_name": "Random Forest",
+      "dataset_split": "Train",
+      "total_samples": 69999,
+      "positive_samples": 18968,
+      "negative_samples": 51031,
+      "base_rate": 0.2709752996471378,
+      "threshold": 0.5,
+      "roc_auc": 0.8338135993056411,
+      "pr_auc": 0.6617739542499135,
+      "accuracy": 0.7274961070872441,
+      "precision": 0.49813230930354335,
+      "recall": 0.7522669759595108,
+      "f1": 0.5993741205133052,
+      "specificity": 0.7182888832278419,
+      "brier_score": 0.17309262897255925,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          36655,
+          14376
+        ],
+        [
+          4699,
+          14269
+        ]
+      ]
+    },
+    "validation_metrics": {
+      "model_name": "Random Forest",
+      "dataset_split": "Validation",
+      "total_samples": 15001,
+      "positive_samples": 4065,
+      "negative_samples": 10936,
+      "base_rate": 0.2709819345376975,
+      "threshold": 0.5,
+      "roc_auc": 0.7266455351093379,
+      "pr_auc": 0.47268704919908455,
+      "accuracy": 0.6860209319378708,
+      "precision": 0.4468260511129431,
+      "recall": 0.6666666666666666,
+      "f1": 0.5350444225074038,
+      "specificity": 0.693215069495245,
+      "brier_score": 0.20016996298149484,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          7581,
+          3355
+        ],
+        [
+          1355,
+          2710
+        ]
+      ]
+    }
+  },
+  "HistGradientBoosting": {
+    "model_name": "HistGradientBoosting",
+    "train_duration_sec": 0.9,
+    "inference_latency_ms": 0.002,
+    "train_metrics": {
+      "model_name": "HistGradientBoosting",
+      "dataset_split": "Train",
+      "total_samples": 69999,
+      "positive_samples": 18968,
+      "negative_samples": 51031,
+      "base_rate": 0.2709752996471378,
+      "threshold": 0.5,
+      "roc_auc": 0.74870550883548,
+      "pr_auc": 0.5026815020776739,
+      "accuracy": 0.6754239346276375,
+      "precision": 0.4402890063021198,
+      "recall": 0.7292808941374948,
+      "f1": 0.54908109395467,
+      "specificity": 0.6554055378103506,
+      "brier_score": 0.2048497484286482,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          33446,
+          17585
+        ],
+        [
+          5135,
+          13833
+        ]
+      ]
+    },
+    "validation_metrics": {
+      "model_name": "HistGradientBoosting",
+      "dataset_split": "Validation",
+      "total_samples": 15001,
+      "positive_samples": 4065,
+      "negative_samples": 10936,
+      "base_rate": 0.2709819345376975,
+      "threshold": 0.5,
+      "roc_auc": 0.7314205832255836,
+      "pr_auc": 0.4778546009359146,
+      "accuracy": 0.6675554963002467,
+      "precision": 0.4311940298507463,
+      "recall": 0.7107011070110701,
+      "f1": 0.5367394333488156,
+      "specificity": 0.651517922457937,
+      "brier_score": 0.20916414067023192,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          7125,
+          3811
+        ],
+        [
+          1176,
+          2889
+        ]
+      ]
+    }
+  },
+  "XGBoost": {
+    "model_name": "XGBoost",
+    "train_duration_sec": 0.61,
+    "inference_latency_ms": 0.004,
+    "train_metrics": {
+      "model_name": "XGBoost",
+      "dataset_split": "Train",
+      "total_samples": 69999,
+      "positive_samples": 18968,
+      "negative_samples": 51031,
+      "base_rate": 0.2709752996471378,
+      "threshold": 0.5,
+      "roc_auc": 0.7654851650034905,
+      "pr_auc": 0.5342670225356057,
+      "accuracy": 0.6812240174859641,
+      "precision": 0.4462921348314607,
+      "recall": 0.7329185997469422,
+      "f1": 0.5547707410511193,
+      "specificity": 0.6620093668554408,
+      "brier_score": 0.19941836978519834,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          33783,
+          17248
+        ],
+        [
+          5066,
+          13902
+        ]
+      ]
+    },
+    "validation_metrics": {
+      "model_name": "XGBoost",
+      "dataset_split": "Validation",
+      "total_samples": 15001,
+      "positive_samples": 4065,
+      "negative_samples": 10936,
+      "base_rate": 0.2709819345376975,
+      "threshold": 0.5,
+      "roc_auc": 0.7302652759519548,
+      "pr_auc": 0.4772944357025194,
+      "accuracy": 0.6698886740883941,
+      "precision": 0.4330566037735849,
+      "recall": 0.7057810578105781,
+      "f1": 0.5367633302151543,
+      "specificity": 0.6565471836137527,
+      "brier_score": 0.20851975041034135,
+      "log_loss": 0.0,
+      "confusion_matrix": [
+        [
+          7180,
+          3756
+        ],
+        [
+          1196,
+          2869
+        ]
+      ]
+    }
+  }
+}

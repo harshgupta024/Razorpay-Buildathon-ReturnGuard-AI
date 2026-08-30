@@ -39,6 +39,8 @@ data/splits/*
 models/*.pkl
 models/*.joblib
 models/*.json
+!models/README.md
+!models/model_metadata.json
 
 # Database
 *.db
