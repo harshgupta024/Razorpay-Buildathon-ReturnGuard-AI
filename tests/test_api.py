@@ -170,3 +170,7 @@ class TestAnalyticsAndConfigEndpoints:
         update_data = update_res.json()
         assert "Conservative" in update_data["active_preset"]
         assert update_data["new_cutoffs"]["low"] == 0.30
+
+        # Reset back to Balanced
+        reset_res = client.post("/api/v1/config/thresholds", json={"preset_name": "Balanced"})
+        assert reset_res.status_code == 200
