@@ -1,0 +1,207 @@
+{
+  "generated_at": "2026-09-01T14:49:22.068823",
+  "total_validation_orders": 15001,
+  "total_actual_returns": 4065,
+  "balanced_sweep_summary": {
+    "total_orders_evaluated": 15001,
+    "total_actual_returns": 4065,
+    "cost_params": {
+      "cost_fn_missed_return_inr": 600.0,
+      "cost_fp_friction_inr": 150.0,
+      "cost_ratio": 4.0
+    },
+    "baselines": {
+      "do_nothing_cost_inr": 2439000.0,
+      "naive_50_cost_inr": 2037000.0
+    },
+    "optimal_f1_threshold": {
+      "threshold": 0.287,
+      "f1": 0.5369,
+      "precision": 0.4344,
+      "recall": 0.7026,
+      "total_cost_inr": 1283100.0
+    },
+    "optimal_cost_threshold": {
+      "threshold": 0.198,
+      "total_cost_inr": 1247100.0,
+      "cost_per_order_inr": 83.13,
+      "net_savings_vs_do_nothing_inr": 1191900.0,
+      "net_savings_vs_naive_50_inr": 789900.0,
+      "precision": 0.3937,
+      "recall": 0.7946,
+      "f1": 0.5265
+    }
+  },
+  "balanced_tier_breakdown": {
+    "LOW": {
+      "order_count": 6829,
+      "returns_count": 840,
+      "empirical_return_rate": 0.12300483233269878,
+      "order_proportion": 0.4552363175788281
+    },
+    "MEDIUM": {
+      "order_count": 5462,
+      "returns_count": 1800,
+      "empirical_return_rate": 0.32954961552544854,
+      "order_proportion": 0.36410905939604027
+    },
+    "HIGH": {
+      "order_count": 2684,
+      "returns_count": 1406,
+      "empirical_return_rate": 0.5238450074515648,
+      "order_proportion": 0.1789214052396507
+    },
+    "CRITICAL": {
+      "order_count": 26,
+      "returns_count": 19,
+      "empirical_return_rate": 0.7307692307692307,
+      "order_proportion": 0.001733217785480968
+    }
+  },
+  "preset_strategy_comparisons": {
+    "Conservative (Growth & Frictionless)": {
+      "description": "Prioritizes minimal checkout friction. Only flags very high risk orders.",
+      "cost_params": {
+        "cost_fn_inr": 600.0,
+        "cost_fp_inr": 300.0
+      },
+      "tier_cutoffs": {
+        "low": 0.3,
+        "medium": 0.55,
+        "high": 0.75
+      },
+      "optimal_cost_threshold": {
+        "threshold": 0.337,
+        "total_cost_inr": 1815600.0,
+        "cost_per_order_inr": 121.03,
+        "net_savings_vs_do_nothing_inr": 623400.0,
+        "net_savings_vs_naive_50_inr": 313200.0,
+        "precision": 0.4529,
+        "recall": 0.6455,
+        "f1": 0.5323
+      },
+      "tier_distribution": {
+        "LOW": {
+          "order_count": 8583,
+          "returns_count": 1252,
+          "empirical_return_rate": 0.1458697425142724,
+          "order_proportion": 0.5721618558762749
+        },
+        "MEDIUM": {
+          "order_count": 5772,
+          "returns_count": 2423,
+          "empirical_return_rate": 0.4197851697851698,
+          "order_proportion": 0.3847743483767749
+        },
+        "HIGH": {
+          "order_count": 631,
+          "returns_count": 378,
+          "empirical_return_rate": 0.5990491283676703,
+          "order_proportion": 0.042063862409172724
+        },
+        "CRITICAL": {
+          "order_count": 15,
+          "returns_count": 12,
+          "empirical_return_rate": 0.8,
+          "order_proportion": 0.0009999333377774815
+        }
+      }
+    },
+    "Balanced (Default Cost-Optimal)": {
+      "description": "Standard balanced trade-off minimizing total net return and friction costs.",
+      "cost_params": {
+        "cost_fn_inr": 600.0,
+        "cost_fp_inr": 150.0
+      },
+      "tier_cutoffs": {
+        "low": 0.2,
+        "medium": 0.45,
+        "high": 0.7
+      },
+      "optimal_cost_threshold": {
+        "threshold": 0.198,
+        "total_cost_inr": 1247100.0,
+        "cost_per_order_inr": 83.13,
+        "net_savings_vs_do_nothing_inr": 1191900.0,
+        "net_savings_vs_naive_50_inr": 789900.0,
+        "precision": 0.3937,
+        "recall": 0.7946,
+        "f1": 0.5265
+      },
+      "tier_distribution": {
+        "LOW": {
+          "order_count": 6829,
+          "returns_count": 840,
+          "empirical_return_rate": 0.12300483233269878,
+          "order_proportion": 0.4552363175788281
+        },
+        "MEDIUM": {
+          "order_count": 5462,
+          "returns_count": 1800,
+          "empirical_return_rate": 0.32954961552544854,
+          "order_proportion": 0.36410905939604027
+        },
+        "HIGH": {
+          "order_count": 2684,
+          "returns_count": 1406,
+          "empirical_return_rate": 0.5238450074515648,
+          "order_proportion": 0.1789214052396507
+        },
+        "CRITICAL": {
+          "order_count": 26,
+          "returns_count": 19,
+          "empirical_return_rate": 0.7307692307692307,
+          "order_proportion": 0.001733217785480968
+        }
+      }
+    },
+    "Aggressive (Margin & Return Defense)": {
+      "description": "Strict defense against return abuse. Catches maximum returns even with added friction.",
+      "cost_params": {
+        "cost_fn_inr": 800.0,
+        "cost_fp_inr": 100.0
+      },
+      "tier_cutoffs": {
+        "low": 0.15,
+        "medium": 0.35,
+        "high": 0.6
+      },
+      "optimal_cost_threshold": {
+        "threshold": 0.099,
+        "total_cost_inr": 1028800.0,
+        "cost_per_order_inr": 68.58,
+        "net_savings_vs_do_nothing_inr": 2223200.0,
+        "net_savings_vs_naive_50_inr": 1626000.0,
+        "precision": 0.3059,
+        "recall": 0.9542,
+        "f1": 0.4633
+      },
+      "tier_distribution": {
+        "LOW": {
+          "order_count": 5225,
+          "returns_count": 565,
+          "empirical_return_rate": 0.10813397129186603,
+          "order_proportion": 0.34831011265915607
+        },
+        "MEDIUM": {
+          "order_count": 4337,
+          "returns_count": 996,
+          "empirical_return_rate": 0.22965183306433018,
+          "order_proportion": 0.28911405906272913
+        },
+        "HIGH": {
+          "order_count": 5166,
+          "returns_count": 2349,
+          "empirical_return_rate": 0.4547038327526132,
+          "order_proportion": 0.34437704153056464
+        },
+        "CRITICAL": {
+          "order_count": 273,
+          "returns_count": 155,
+          "empirical_return_rate": 0.5677655677655677,
+          "order_proportion": 0.018198786747550162
+        }
+      }
+    }
+  }
+}
