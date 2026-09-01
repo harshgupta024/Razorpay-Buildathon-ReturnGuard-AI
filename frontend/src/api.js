@@ -74,6 +74,16 @@ export async function fetchOrders(tier = null, limit = 50, offset = 0) {
   }
 }
 
+export async function fetchOrderDetail(orderId) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/orders/${orderId}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function fetchReviewQueue(statusFilter = "PENDING") {
   try {
     const res = await fetch(`${API_BASE_URL}/review/queue?status_filter=${statusFilter}`);

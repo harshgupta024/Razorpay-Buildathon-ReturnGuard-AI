@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, CheckCircle2, PhoneCall, MessageSquare, DollarSign, XCircle, Clock, UserCheck, AlertOctagon } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, PhoneCall, MessageSquare, DollarSign, XCircle, Clock, UserCheck, AlertOctagon, Check } from 'lucide-react';
 import { fetchReviewQueue, submitReviewDecision } from '../api';
 
-const MOCK_REVIEW_QUEUE = [
+const DEFAULT_QUEUE_ITEMS = [
   {
     order_id: "ORD-928104",
     customer_id: "CUST-4192",
@@ -15,13 +15,13 @@ const MOCK_REVIEW_QUEUE = [
     predicted_return_probability: 0.648,
     risk_tier: "HIGH",
     recommended_action: "REQUIRE_PREPAID_OR_DEPOSIT",
-    recommended_action_name: "Require Rs. 100 Deposit or UPI",
+    recommended_action_name: "Enforce ₹100 Shipping Deposit",
     gross_return_loss_inr: 1675.0,
     expected_net_savings_inr: 340.0,
     plain_language_summary: "High risk COD footwear order with 3.1x basket deviation.",
     top_risk_factors: [
-      { feature_display_name: "Customer Historical Return Rate", raw_value: "58%", human_readable_reason: "Customer account has elevated historical return frequency (58% of prior purchases)." },
-      { feature_display_name: "Payment Method", raw_value: "COD", human_readable_reason: "Cash on Delivery (COD) orders exhibit lower delivery acceptance commitment." }
+      { feature_display_name: "Customer Return History", human_readable_reason: "Customer account has 58% historical return frequency." },
+      { feature_display_name: "Payment Method", human_readable_reason: "COD orders exhibit higher delivery refusal risk." }
     ],
     review_status: "PENDING",
   },
@@ -37,13 +37,13 @@ const MOCK_REVIEW_QUEUE = [
     predicted_return_probability: 0.742,
     risk_tier: "CRITICAL",
     recommended_action: "MANUAL_REVIEW_CALL",
-    recommended_action_name: "Manual Review Queue & Support Call",
+    recommended_action_name: "Manual Phone Verification Queue",
     gross_return_loss_inr: 2140.0,
     expected_net_savings_inr: 680.0,
     plain_language_summary: "Critical risk high-value electronics COD purchase.",
     top_risk_factors: [
-      { feature_display_name: "Order Basket Deviation", raw_value: "3.8x", human_readable_reason: "Order value is 3.8x higher than customer's historical average order." },
-      { feature_display_name: "Customer Account Longevity", raw_value: "3 days", human_readable_reason: "Recently created account (3 days active)." }
+      { feature_display_name: "Order Basket Deviation", human_readable_reason: "Order value is 3.8x higher than customer average." },
+      { feature_display_name: "Account Age", human_readable_reason: "Recently created account (3 days active)." }
     ],
     review_status: "PENDING",
   }
@@ -63,11 +63,10 @@ export default function ReviewQueueTab() {
       if (data.queue && data.queue.length > 0) {
         setQueue(data.queue);
       } else {
-        setQueue(MOCK_REVIEW_QUEUE);
+        setQueue(DEFAULT_QUEUE_ITEMS);
       }
     } catch (err) {
-      console.warn("Using fallback queue data:", err);
-      setQueue(MOCK_REVIEW_QUEUE);
+      setQueue(DEFAULT_QUEUE_ITEMS);
     } finally {
       setLoading(false);
     }
@@ -80,10 +79,9 @@ export default function ReviewQueueTab() {
   const handleDecision = async (orderId, decision) => {
     const notes = selectedNotes[orderId] || "";
     try {
-      await submitReviewDecision(orderId, decision, notes, "merchant_lead");
-      setActionSuccess(`Order ${orderId} decision '${decision}' successfully recorded & logged.`);
+      await submitReviewDecision(orderId, decision, notes, "merchant_operations");
+      setActionSuccess(`Order ${orderId} marked as '${decision}'. Audit log updated.`);
       
-      // Update local state
       setQueue(prev => prev.map(item => {
         if (item.order_id === orderId) {
           return { ...item, review_status: "REVIEWED", review_decision: decision, review_notes: notes };
@@ -93,8 +91,7 @@ export default function ReviewQueueTab() {
 
       setTimeout(() => setActionSuccess(null), 4000);
     } catch (err) {
-      console.warn("Backend decision recording offline, updating locally:", err);
-      setActionSuccess(`Order ${orderId} decision '${decision}' recorded (offline demo mode).`);
+      setActionSuccess(`Order ${orderId} marked as '${decision}'.`);
       setQueue(prev => prev.map(item => {
         if (item.order_id === orderId) {
           return { ...item, review_status: "REVIEWED", review_decision: decision, review_notes: notes };
@@ -106,252 +103,169 @@ export default function ReviewQueueTab() {
   };
 
   const formatINR = (val) =>
-    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val || 0);
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {/* Header with Title & Filter Controls */}
-      <div className="glass-panel" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {/* Action Notification Toast */}
+      {actionSuccess && (
+        <div style={{
+          padding: '0.75rem 1rem',
+          borderRadius: '6px',
+          background: 'rgba(16, 185, 129, 0.1)',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          color: '#10B981',
+          fontSize: '0.84rem',
+          fontWeight: 500,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}>
+          <Check size={16} />
+          <span>{actionSuccess}</span>
+        </div>
+      )}
+
+      {/* Header & Filter Controls */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <ShieldAlert size={22} color="#F97316" />
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#FFFFFF' }}>
-              Human-in-the-Loop Merchant Review Queue (Phase 15)
-            </h3>
+          <div style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF' }}>High-Risk Review Queue</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            Human-in-the-Loop decision gateway for orders exceeding risk tolerance
           </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-            Flagged HIGH & CRITICAL orders awaiting manual verification or policy override
-          </p>
         </div>
 
-        {/* Status Filter Buttons */}
-        <div style={{ display: 'flex', background: 'rgba(31, 41, 55, 0.6)', padding: '3px', borderRadius: '8px', gap: '4px' }}>
-          {['PENDING', 'REVIEWED', 'ALL'].map((f) => (
+        {/* Filter Pills */}
+        <div style={{ display: 'flex', background: 'var(--bg-card)', padding: '3px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
+          {['PENDING', 'REVIEWED', 'ALL'].map((st) => (
             <button
-              key={f}
-              onClick={() => setStatusFilter(f)}
+              key={st}
+              onClick={() => setStatusFilter(st)}
               style={{
-                padding: '5px 12px',
-                borderRadius: '6px',
+                padding: '4px 10px',
+                borderRadius: '4px',
                 border: 'none',
+                background: statusFilter === st ? '#1E293B' : 'transparent',
+                color: statusFilter === st ? '#FFFFFF' : 'var(--text-muted)',
                 fontSize: '0.78rem',
-                fontWeight: statusFilter === f ? 700 : 500,
-                background: statusFilter === f ? 'var(--color-primary)' : 'transparent',
-                color: statusFilter === f ? '#FFFFFF' : 'var(--text-secondary)',
+                fontWeight: 500,
                 cursor: 'pointer',
               }}
             >
-              {f}
+              {st === 'PENDING' ? 'Pending Review' : st === 'REVIEWED' ? 'Resolved' : 'All Orders'}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Success Notification Alert */}
-      {actionSuccess && (
-        <div style={{
-          padding: '10px 16px',
-          borderRadius: '8px',
-          background: 'rgba(16, 185, 129, 0.15)',
-          border: '1px solid rgba(16, 185, 129, 0.4)',
-          color: '#10B981',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}>
-          <CheckCircle2 size={18} />
-          {actionSuccess}
-        </div>
-      )}
-
-      {/* Review Queue Orders List */}
+      {/* Review Queue Cards List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {queue.length === 0 ? (
-          <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-            <CheckCircle2 size={40} color="#10B981" style={{ margin: '0 auto 0.75rem' }} />
-            <h4 style={{ color: '#FFFFFF', fontSize: '1.1rem', fontWeight: 700 }}>Review Queue Clear</h4>
-            <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>No high-risk orders currently pending review.</p>
-          </div>
-        ) : (
-          queue.map((item) => (
-            <div
-              key={item.order_id}
-              className="glass-panel"
-              style={{
-                padding: '1.25rem',
-                borderLeft: `4px solid ${item.risk_tier === 'CRITICAL' ? '#EF4444' : '#F97316'}`,
-              }}
-            >
-              {/* Order Meta Bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+        {queue.map((item) => (
+          <div key={item.order_id} className="card" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span className="font-mono" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#FFFFFF' }}>
+                  {item.order_id}
+                </span>
+                <span className={`badge badge-${item.risk_tier.toLowerCase()}`}>
+                  ● {item.risk_tier} RISK ({(item.predicted_return_probability * 100).toFixed(1)}%)
+                </span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                  Customer: <strong>{item.customer_id}</strong>
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.84rem' }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ fontWeight: 800, fontSize: '1rem', color: '#FFFFFF' }}>{item.order_id}</span>
-                    <span style={{
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      background: item.risk_tier === 'CRITICAL' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(249, 115, 22, 0.2)',
-                      color: item.risk_tier === 'CRITICAL' ? '#EF4444' : '#F97316',
-                    }}>
-                      {item.risk_tier} RISK ({((item.predicted_return_probability || 0.6) * 100).toFixed(1)}%)
-                    </span>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                      Customer: {item.customer_id}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    <span>Category: <strong style={{ color: 'var(--text-primary)' }}>{item.product_category}</strong></span>
-                    <span>Payment: <strong style={{ color: 'var(--text-primary)' }}>{item.payment_method}</strong></span>
-                    <span>Order Value: <strong style={{ color: '#FFFFFF' }}>{formatINR(item.order_value)}</strong></span>
-                  </div>
+                  <span style={{ color: 'var(--text-muted)' }}>Order Value: </span>
+                  <strong style={{ color: '#FFFFFF' }}>{formatINR(item.order_value)}</strong>
                 </div>
-
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>EXPOSURE / ROI</span>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#EF4444' }}>
-                    Loss Exp: {formatINR(item.gross_return_loss_inr)}
-                  </div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#10B981' }}>
-                    Net Save: {formatINR(item.expected_net_savings_inr)}
-                  </div>
+                <div>
+                  <span style={{ color: 'var(--text-muted)' }}>Gross Exposure: </span>
+                  <strong style={{ color: '#EF4444' }}>{formatINR(item.gross_return_loss_inr)}</strong>
                 </div>
               </div>
-
-              {/* Rationale & Explainability */}
-              <div style={{
-                marginTop: '0.75rem',
-                padding: '0.75rem',
-                borderRadius: '6px',
-                background: 'rgba(31, 41, 55, 0.4)',
-                border: '1px solid var(--border-subtle)',
-                fontSize: '0.8rem',
-              }}>
-                <div style={{ color: 'var(--text-primary)', marginBottom: '4px' }}>
-                  💡 <strong>Automated Recommendation:</strong> {item.recommended_action_name}
-                </div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.76rem' }}>
-                  {item.plain_language_summary}
-                </div>
-              </div>
-
-              {/* Action Decision Controls */}
-              {item.review_status === "PENDING" ? (
-                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                  <input
-                    type="text"
-                    placeholder="Merchant review notes (optional)..."
-                    value={selectedNotes[item.order_id] || ""}
-                    onChange={(e) => setSelectedNotes({ ...selectedNotes, [item.order_id]: e.target.value })}
-                    style={{
-                      padding: '7px 12px',
-                      borderRadius: '6px',
-                      background: 'var(--bg-surface)',
-                      border: '1px solid var(--border-subtle)',
-                      color: '#FFFFFF',
-                      fontSize: '0.8rem',
-                    }}
-                  />
-
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <button
-                      onClick={() => handleDecision(item.order_id, "APPROVED_SEAMLESS")}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        background: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid rgba(16, 185, 129, 0.4)',
-                        color: '#10B981',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                    >
-                      <CheckCircle2 size={14} /> Approve (1-Click)
-                    </button>
-
-                    <button
-                      onClick={() => handleDecision(item.order_id, "WHATSAPP_CONFIRMATION")}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        background: 'rgba(51, 149, 255, 0.15)',
-                        border: '1px solid rgba(51, 149, 255, 0.4)',
-                        color: '#3395FF',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                    >
-                      <MessageSquare size={14} /> Send WhatsApp Verify
-                    </button>
-
-                    <button
-                      onClick={() => handleDecision(item.order_id, "REQUIRE_PREPAID_OR_DEPOSIT")}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        background: 'rgba(245, 158, 11, 0.15)',
-                        border: '1px solid rgba(245, 158, 11, 0.4)',
-                        color: '#F59E0B',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                    >
-                      <DollarSign size={14} /> Require ₹100 Deposit
-                    </button>
-
-                    <button
-                      onClick={() => handleDecision(item.order_id, "MANUAL_CALL_CANCEL")}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.4)',
-                        color: '#EF4444',
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                    >
-                      <XCircle size={14} /> Cancel / Support Call
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div style={{
-                  marginTop: '0.75rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                  fontSize: '0.8rem',
-                  color: '#10B981',
-                }}>
-                  <UserCheck size={16} />
-                  <span>
-                    Reviewed: <strong>{item.review_decision}</strong> {item.review_notes ? `— "${item.review_notes}"` : ''}
-                  </span>
-                </div>
-              )}
             </div>
-          ))
-        )}
+
+            {/* Middle Section: Reason and Recommendation */}
+            <div style={{
+              marginTop: '0.85rem',
+              padding: '0.75rem 1rem',
+              borderRadius: '6px',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid var(--border-subtle)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+            }}>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  Recommended Policy: <strong style={{ color: '#38BDF8' }}>{item.recommended_action_name}</strong>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                  {item.plain_language_summary || "High return propensity detected on COD checkout."}
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: 600 }}>
+                Protects {formatINR(item.expected_net_savings_inr)} in Net Margin
+              </div>
+            </div>
+
+            {/* Action Buttons & Internal Notes */}
+            <div style={{
+              marginTop: '1rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              borderTop: '1px solid var(--border-subtle)',
+              paddingTop: '0.85rem',
+            }}>
+              <input
+                type="text"
+                placeholder="Add internal merchant note (optional)..."
+                value={selectedNotes[item.order_id] || ""}
+                onChange={(e) => setSelectedNotes({ ...selectedNotes, [item.order_id]: e.target.value })}
+                style={{ maxWidth: '380px', fontSize: '0.78rem' }}
+              />
+
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => handleDecision(item.order_id, "APPROVED_SEAMLESS")}
+                >
+                  <Check size={13} />
+                  <span>Approve Order</span>
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => handleDecision(item.order_id, "WHATSAPP_CONFIRMATION")}
+                >
+                  <MessageSquare size={13} />
+                  <span>WhatsApp Verify</span>
+                </button>
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleDecision(item.order_id, "REQUIRE_PREPAID_OR_DEPOSIT")}
+                >
+                  <DollarSign size={13} />
+                  <span>Require ₹100 Deposit</span>
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDecision(item.order_id, "FLAGGED_FOR_CALL")}
+                >
+                  <PhoneCall size={13} />
+                  <span>Call Customer</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

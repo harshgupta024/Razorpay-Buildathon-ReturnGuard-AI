@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import TopNav from './components/TopNav';
 import OverviewTab from './components/OverviewTab';
 import SimulatorTab from './components/SimulatorTab';
 import ReviewQueueTab from './components/ReviewQueueTab';
@@ -36,40 +37,36 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)' }}>
-      {/* Top Navigation Bar */}
-      <Header
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
+      {/* Authentic Razorpay Dark Navy Sidebar */}
+      <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        apiStatus={apiStatus}
-        strategyPreset={strategyPreset}
-        onPresetChange={handlePresetChange}
+        pendingReviewCount={2}
       />
 
-      {/* Main Content Area */}
-      <main style={{
-        maxWidth: '1440px',
-        width: '100%',
-        margin: '0 auto',
-        padding: '1.5rem 2rem 3rem',
-        flex: 1,
-      }}>
-        {activeTab === 'overview' && <OverviewTab analyticsData={analyticsData} />}
-        {activeTab === 'simulator' && <SimulatorTab />}
-        {activeTab === 'review' && <ReviewQueueTab />}
-        {activeTab === 'orders' && <OrdersFeedTab />}
-      </main>
+      {/* Main Merchant Portal Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <TopNav
+          activeTab={activeTab}
+          strategyPreset={strategyPreset}
+          onPresetChange={handlePresetChange}
+          apiStatus={apiStatus}
+        />
 
-      {/* Footer */}
-      <footer style={{
-        borderTop: '1px solid var(--border-subtle)',
-        padding: '1rem 2rem',
-        textAlign: 'center',
-        fontSize: '0.78rem',
-        color: 'var(--text-muted)',
-      }}>
-        ReturnGuard AI • Razorpay Buildathon 2026 • AI-Powered E-Commerce Return Risk & Decision Intelligence
-      </footer>
+        <main style={{
+          padding: '1.5rem 2rem 3rem',
+          maxWidth: '1400px',
+          width: '100%',
+          margin: '0 auto',
+          flex: 1,
+        }}>
+          {activeTab === 'overview' && <OverviewTab analyticsData={analyticsData} />}
+          {activeTab === 'simulator' && <SimulatorTab />}
+          {activeTab === 'review' && <ReviewQueueTab />}
+          {activeTab === 'orders' && <OrdersFeedTab />}
+        </main>
+      </div>
     </div>
   );
 }
