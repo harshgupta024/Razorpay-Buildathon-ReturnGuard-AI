@@ -124,7 +124,7 @@ def evaluate_predictions(
     brier = float(brier_score_loss(y_true, y_prob))
 
     try:
-        ll = float(log_loss(y_true, y_prob, eps=1e-15))
+        ll = float(log_loss(y_true, y_prob))
     except Exception:
         ll = 0.0
 
