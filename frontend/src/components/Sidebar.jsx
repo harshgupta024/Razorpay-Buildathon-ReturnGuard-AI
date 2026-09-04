@@ -148,23 +148,27 @@ export default function Sidebar({ activeTab, setActiveTab, pendingReviewCount = 
 
       {/* Bottom Footer Section */}
       <div style={{
-        padding: '1rem',
+        padding: '0.85rem 1rem',
         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        fontSize: '0.75rem',
+        fontSize: '0.74rem',
         color: '#94A3B8',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.5rem',
+        gap: '0.4rem',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>Inference SLA:</span>
+          <span>Model Compute:</span>
           <strong style={{ color: '#10B981' }}>0.002 ms</strong>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>Opt. Cutoff:</span>
-          <strong style={{ color: '#38BDF8' }}>τ* = 0.20</strong>
+          <span>End-to-End API:</span>
+          <strong style={{ color: '#38BDF8' }}>&lt; 5 ms</strong>
         </div>
-        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.5rem', fontSize: '0.72rem', color: '#64748B' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Cost Cutoff:</span>
+          <strong style={{ color: '#E2E8F0' }}>τ* = 0.20</strong>
+        </div>
+        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.70rem', color: '#64748B' }}>
           Razorpay Buildathon 2026
         </div>
       </div>

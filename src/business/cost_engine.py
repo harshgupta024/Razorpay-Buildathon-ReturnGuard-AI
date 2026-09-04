@@ -230,8 +230,33 @@ class BusinessCostEngine:
                 )
             )
 
-        # Select action that maximizes net savings (or lowest total expected cost)
-        best_eval = max(evaluations, key=lambda e: e.expected_net_savings)
+        # Filter candidate policies based on risk tier boundaries to avoid contradictory actions
+        # Low risk (< 0.20): Always 1-Click Seamless Checkout (Zero customer friction)
+        # Medium risk (0.20 - 0.45): Soft address or interactive WhatsApp verification
+        # High risk (0.45 - 0.70): WhatsApp verification, advance shipping deposit, or support review
+        # Critical risk (>= 0.70): Advance deposit or manual verification queue
+        if p < 0.20:
+            allowed_actions = {MitigationActionType.ALLOW_SEAMLESS}
+        elif p < 0.45:
+            allowed_actions = {
+                MitigationActionType.ALLOW_SEAMLESS,
+                MitigationActionType.SOFT_CONFIRMATION,
+                MitigationActionType.WHATSAPP_CONFIRMATION,
+            }
+        elif p < 0.70:
+            allowed_actions = {
+                MitigationActionType.WHATSAPP_CONFIRMATION,
+                MitigationActionType.REQUIRE_PREPAID_OR_DEPOSIT,
+                MitigationActionType.MANUAL_REVIEW_CALL,
+            }
+        else:
+            allowed_actions = {
+                MitigationActionType.REQUIRE_PREPAID_OR_DEPOSIT,
+                MitigationActionType.MANUAL_REVIEW_CALL,
+            }
+
+        candidate_evaluations = [e for e in evaluations if e.action_type in allowed_actions]
+        best_eval = max(candidate_evaluations, key=lambda e: e.expected_net_savings) if candidate_evaluations else evaluations[0]
         best_eval.is_recommended = True
 
         # Synthesize clear, non-accusatory merchant rationale
