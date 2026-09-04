@@ -69,6 +69,14 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
+# Video / Media files (large demo recordings)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
 # Scripts & Internal Video Prompts
 docs/demo-script.md
 demo-script.md
+
