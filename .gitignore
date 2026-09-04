@@ -68,3 +68,7 @@ htmlcov/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Scripts & Internal Video Prompts
+docs/demo-script.md
+demo-script.md
